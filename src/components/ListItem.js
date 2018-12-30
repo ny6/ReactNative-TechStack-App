@@ -1,5 +1,7 @@
-import React from 'react';
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { Component } from 'react';
+import {
+  Text, TouchableWithoutFeedback, View, LayoutAnimation,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { CardSection } from './common';
@@ -13,16 +15,29 @@ const styles = {
 };
 const { titleStyle } = styles;
 
-const ListItem = ({ item, func, selected }) => (
-  <TouchableWithoutFeedback onPress={() => func(item.id)}>
-    <View>
-      <CardSection>
-        <Text style={titleStyle}>{item.title}</Text>
-      </CardSection>
-      {item.id === selected && <Text>{item.description}</Text>}
-    </View>
-  </TouchableWithoutFeedback>
-);
+class ListItem extends Component {
+  componentWillUpdate() {
+    LayoutAnimation.spring();
+  }
+
+  render() {
+    const { item, func, selected } = this.props;
+    return (
+      <TouchableWithoutFeedback onPress={() => func(item.id)}>
+        <View>
+          <CardSection>
+            <Text style={titleStyle}>{item.title}</Text>
+          </CardSection>
+          {item.id === selected && (
+            <CardSection>
+              <Text style={{ flex: 1 }}>{item.description}</Text>
+            </CardSection>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+}
 
 ListItem.defaultProps = { selected: null };
 ListItem.propTypes = {
